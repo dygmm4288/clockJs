@@ -5,9 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Clock JS</title>
     <link href="./style.css" rel="stylesheet" />
+    <style>
+      #clock-wrapper {
+        width: 1000px;
+        height: 1000px;
+        margin: 0 auto;
+        background-color: cyan;
+        border-radius: 50%;
+        position: relative;
+      }
+      #clock-wrapper .hand {
+        height: 2px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform-origin: left;
+        transition: transform 1s;
+      }
+      #clock-hour.hand {
+        background-color: red;
+        height: 10px;
+        z-index: 3;
+      }
+      #clock-minute.hand {
+        background-color: blue;
+        height: 5px;
+        z-index: 2;
+      }
+      #clock-second {
+        background-color: black;
+      }
+      #clock-wrapper .hole {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: black;
+        z-index: 4;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      h1,
+      h2 {
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
-    <div id="clock-wrapper"></div>
+    <div id="clock-wrapper">
+      <div class="hand" id="clock-hour"></div>
+      <div class="hand" id="clock-minute"></div>
+      <div class="hand" id="clock-second"></div>
+      <div class="hole"></div>
+    </div>
+    <h1>What Time is it now?</h1>
+    <h2 class="time"></h2>
     <script src="./clock.js"></script>
+    <script>
+      const secondHandElement = document.querySelector('#clock-second');
+      const minuteHandElement = document.querySelector('#clock-minute');
+      const hourHandElement = document.querySelector('#clock-hour');
+      const timeHeading = document.querySelector('h2.time');
+
+      const clock = new Clock(secondHandElement, minuteHandElement, hourHandElement, 500);
+      let interval = setInterval(() => {
+        clock.updateTime();
+        timeHeading.innerText = getTime();
+      }, 1000);
+
+      function getTime() {
+        const date = new Date();
+        const zFill = (s) => (s < 10 ? '0' + s : s);
+        const getTime = (func) => zFill(func.apply(date));
+        // 여기서 시간 분 초를 구하고
+        const hh = getTime(date.getHours);
+        const mm = getTime(date.getMinutes);
+        const ss = getTime(date.getSeconds);
+
+        return `${hh} : ${mm} : ${ss}`;
+      }
+    </script>
   </body>
 </html>
